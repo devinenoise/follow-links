@@ -1,2 +1,1 @@
-# follow-links
-Links that resize and highlight when hovering.
+Nav bar links that resize and highlight when hovering.
