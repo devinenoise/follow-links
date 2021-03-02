@@ -1,27 +1,45 @@
 //grabbing all the links
-const triggers = document.querySelectorAll('a');
+const triggers = document.querySelectorAll('.cool > li');
+const background = document.querySelector('.dropdownBackground');
+const nav = document.querySelector('.top');
 
-//creating the highlight span and adding to the DOM
-const highlight = document.createElement('span');
-highlight.classList.add('highlight');
-document.body.append(highlight);
+function handleEnter() {
+  this.classList.add('trigger-enter');
+  setTimeout(() => {
+    if (this.classList.contains('trigger-enter')) {
+      this.classList.add('trigger-enter-active');
+    }
+  }, 150);
+  background.classList.add('open');
 
-function highlightLink() {
-  //getting the link coordinates from the DOM
-  const linkCoords = this.getBoundingClientRect();
-  //custom coordinates to account for windows scroll
+  const dropdown = this.querySelector('.dropdown');
+  const dropdownCoords = dropdown.getBoundingClientRect();
+  const navCoords = nav.getBoundingClientRect();
+
   const coords = {
-    width: linkCoords.width,
-    height: linkCoords.height,
-    top: linkCoords.top + window.scrollY,
-    left: linkCoords.left + window.scrollX
+    height: dropdownCoords.height,
+    width: dropdownCoords.width,
+    top: dropdownCoords.top - navCoords.top,
+    left: dropdownCoords.left - navCoords.left
   };
 
-  // styling the link with highlight
-  highlight.style.width = `${coords.width}px`;
-  highlight.style.height = `${coords.height}px`;
-  highlight.style.transform = `translate(${coords.left}px, ${coords.top}px)`;
+  // resizes the white box to the content of the nav link
+  background.style.setProperty('width', `${coords.width}px`);
+  background.style.setProperty('height', `${coords.height}px`);
+  background.style.setProperty(
+    'transform',
+    `translate(${coords.left}px, ${coords.top}px`
+  );
 }
 
-//for each link run highlightLink function
-triggers.forEach(a => a.addEventListener('mouseenter', highlightLink));
+function handleLeave() {
+  this.classList.remove('trigger-enter', 'trigger-enter-active');
+  background.classList.remove('open');
+}
+
+triggers.forEach(trigger =>
+  trigger.addEventListener('mouseenter', handleEnter)
+);
+triggers.forEach(trigger =>
+  trigger.addEventListener('mouseleave', handleLeave)
+);
